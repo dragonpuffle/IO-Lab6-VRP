@@ -35,11 +35,11 @@ class Benchmark:
         total_time = 0
         optimal_value = 0
         for _ in range(self.runs):
-            alg = AntColonyAlgorithm(data, alpha=0.5, beta=5.0, phi=0.3, q=100, num_ants=10, iterations=100)
+            alg = AntColonyAlgorithm(data, alpha=0.5, beta=5.0, phi=0.3, q=100, num_ants=10, iterations=100, vis_path="plots/" + benchmark[0] + "/" + benchmark[:-3] + ".png")
             optimal_value = alg.optimal_value
             start = time.time()
 
-            solution, cost = alg.solve(False)
+            solution, cost = alg.solve(True)
 
             total_time += time.time() - start
             if cost < best_total_cost:
@@ -56,7 +56,7 @@ class Benchmark:
             'diff': best_total_cost - optimal_value,
             'percent_diff': round(((best_total_cost - optimal_value) / optimal_value) * 100, 7)
         })
-        self.save_solution("results/" + benchmark[:-3] + ".sol", best_solution, best_total_cost)
+        self.save_solution("results/" + benchmark[0] + "/" + benchmark[:-3] + ".sol", best_solution, best_total_cost)
 
     def save_solution(self, file_path: str, solution, cost) -> None:
         with open(file_path, 'w') as file:
