@@ -8,7 +8,7 @@ from src.read_data import VRPData, read_parse_data
 
 class AntColonyAlgorithm:
     def __init__(self, data: VRPData, alpha: float = 0.5, beta: float = 5.0, phi=0.6, q: int = 100,
-                 num_ants: int = 10, iterations: int = 100):
+                 num_ants: int = 10, iterations: int = 100, vis_path: str = "graph.png"):
         self.optimal_value = data.optimal_value
         self.num_customers = data.num_customers
         self.num_trucks = data.num_trucks
@@ -29,6 +29,8 @@ class AntColonyAlgorithm:
 
         self.best_solution = None
         self.best_cost = float('inf')
+
+        self.vis_path = vis_path
 
 
     def compute_distance_mtx(self) -> np.ndarray:
@@ -118,8 +120,8 @@ class AntColonyAlgorithm:
 
             # 3 обновление феромона
             self.update_pheromones(all_solutions)
-
-        self.visualize() # always before inc_routes!!!
+        if visualize:
+            self.visualize() # always before inc_routes!!!
         self.inc_routes()
         return self.best_solution, self.best_cost
 
@@ -148,11 +150,12 @@ class AntColonyAlgorithm:
         plt.grid(True)
         plt.axis('equal')
         plt.tight_layout()
-        plt.show()
+        plt.savefig(self.vis_path, dpi=300, bbox_inches='tight')
+        plt.close()
 
 if __name__ == '__main__':
     data1 = read_parse_data('benchmarks/A/A-n32-k5.vrp')
-    alg = AntColonyAlgorithm(data1)
+    alg = AntColonyAlgorithm(data1, alpha=0.5, beta=5.0, phi=0.3, q=100, num_ants=20, iterations=300)
     solution1, cost1 = alg.solve(True)
     print('solution:', solution1, 'cost:', cost1)
     print('optimal value:', alg.optimal_value)
