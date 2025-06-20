@@ -61,7 +61,7 @@ class Benchmark:
     def save_solution(self, file_path: str, solution, cost) -> None:
         with open(file_path, 'w') as file:
             for index, route in enumerate(solution):
-                file.write(f"Route #{index + 1}: {" ".join(map(str, route))}")
+                file.write(f"Route #{index + 1}: {" ".join(map(str, route[:-1]))}")
                 file.write("\n")
             file.write(f"cost {int(cost)}")
             file.write("\n")
